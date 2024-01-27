@@ -28,6 +28,7 @@ pipeline {
                   sh 'docker push abbadakn/numeric-app:""$GIT_COMMIT""'
         }
       }
+      }
     }    
     }
 }

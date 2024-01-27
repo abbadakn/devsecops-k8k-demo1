@@ -26,9 +26,8 @@ pipeline {
                   sh 'printenv'
                   sh 'docker build -t abbadakn/numeric-app:""$GIT_COMMIT"" .'
                   sh 'docker push abbadakn/numeric-app:""$GIT_COMMIT""'
-        }
-      }
-      
-    }    
-    }
+                }
+                }
+         }    
+  }
 }

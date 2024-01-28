@@ -22,10 +22,12 @@ pipeline {
         }
       stage('Docker Build and Push') {
               steps {
+                script {
                 withDockerRegistry([credentialsId: "docker-hub", url: 'https://docker.io']) {
                   sh 'printenv'
                   sh 'docker build -t abbadakn/numeric-app:""$GIT_COMMIT"" .'
                   sh 'docker push abbadakn/numeric-app:""$GIT_COMMIT""'
+                }
                 }
                 }
          }    

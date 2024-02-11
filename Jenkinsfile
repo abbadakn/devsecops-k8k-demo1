@@ -29,6 +29,11 @@ pipeline {
               pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
             }
           }
+        }
+        stage('SonarQube - SAST') {
+          steps {
+            mvn sonar:sonar -Dsonar.projectKey=numeric-application -Dsonar.host.url=http://devsecops-abbad.eastus.cloudapp.azure.com:9000 -Dsonar.login=a037c82688bda5d927a4911206692ffe9cd93bd9
+          }
         }        
         stage('Docker Build and Push') {
             steps {

@@ -1,0 +1,162 @@
+Commands for reference:
+
+git clone https://github.com/hashcerts/kubernetes-devops-security.git
+bash kubernetes-devops-security/setup/vm-install-script/install-script.sh
+
+https://www.digitalocean.com/community/tutorials/how-to-install-jenkins-on-ubuntu-20-04
+https://askubuntu.com/questions/660599/i-am-installing-jenkins-server-but-its-giving-w-gpg-error
+JENKINS
+=======
+##### apt-get -y install openjdk-8-jdk
+
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5BA31D57EF5975CA
+sudo apt update
+sudo apt install jenkins
+
+START
+=====
+sudo systemctl start jenkins
+sudo systemctl status jenkins
+
+
+
+kubectl run nginx-pod --image nginx
+kubectl get po
+
+
+KUBE VERIFICATION
+=================
+kubectl get node -o wide
+
+
+# Jenkins plugins
+bash installer.sh
+
+apt update
+
+
+KUBECONFIG
+==========
+cd ~
+cat.kube/config
+
+WEB HOOK INTEGRATION
+
+
+DOCKER HUB INTEGRATION
+======================
+#https://docs.oracle.com/cd/E19253-01/816-4557/secfile-60/index.html#:~:text=When%20you%20create%20a%20file,and%20execute%20permission%20to%20everyone.
+chmod 666 docker.sock
+
+
+kubectl -n default create deploy node-app --image hashcerts/node-service:v1 
+kubectl -n default expose deploy node-app --name node-service --port 5000
+
+
+
+## Talisman Installation
+curl https://thoughtworks.github.io/talisman/install.sh > ~/install-talisman.sh
+chmod +x ~/install-talisman.sh
+cd kubernetes-devops-security/
+~/install-talisman.sh
+
+
+
+## Create sec_files
+mkdir sec_files && cd sec_files
+echo "username=hashcerts" > file1
+echo "secure-password123" > password.txt
+echo "apikey=AizaSyCqhjgrPtr_La56sdUkjfav_laCqhjgrPtr_2s" > file2
+echo "base64encodedsecret=cGFzc3dvcmQtaXMtcXdlcnR5MTIzCg==" > file3
+
+
+
+git add / push / pull
+
+
+
+
+
+## Run SonarQube as a Docker Container
+docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:8.9.1-community
+
+
+docker ps -a | grep -i sonar
+
+docker restart sonarcube [after every single restart of azure virtual machine]
+or
+docker start 6f8e35cfcb5f [use id instead of the name if the above restart command doesn't work]
+
+# to run the sonarqube SAST
+mvn sonar:sonar \
+  -Dsonar.projectKey=numeric-application \
+  -Dsonar.host.url=http://devsecops-demoez.eastus.cloudapp.azure.com:9000 \
+  -Dsonar.login=fdc69c2d3c1182325a559b5445b6b34902961467
+  
+  
+  
+## Trivy
+docker run --rm -v $HOME/Library/Caches:/root/.cache aquasec/trivy:0.18.3 python:3.4-alpine
+
+docker run --rm -v $HOME/Library/Caches:/root/.cache aquasec/trivy:0.18.3 --severity CRITICAL python:3.4-alpine
+
+
+# to print the exit code
+echo $?
+
+
+docker run --rm -v $HOME/Library/Caches:/root/.cache aquasec/trivy:0.18.3 --severity CRITICAL --exit-code 1 python:3.4-alpine
+
+docker run --rm -v $HOME/Library/Caches:/root/.cache aquasec/trivy:0.18.3 --severity LOW --exit-code 0 python:3.4-alpine
+
+
+
+# check for vulnerability on the command line
+docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 1 --severity CRITICAL --light openjdk
+
+docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 1 --severity CRITICAL --light openjdk:8
+
+docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 1 --severity CRITICAL --light openjdk:8-alpine
+
+# recommended version to be used for Trivy
+docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 1 --severity CRITICAL --light adoptopenjdk/openjdk8:alpine-slim 
+
+
+# To find the user for the container / pod
+kubectl get po
+kubectl exec -it devsecops-b4669c6b7-j2c6w -- id
+
+
+# To list the number of users
+cat /etc/passwd | wc -l
+# To show the list of users
+cat /etc/passwd
+
+
+
+# Kubernetes OPA Conftest
+kubectl get deploy
+
+# Rollout
+kubectl rollout deploy -h
+
+# Rollback
+kubectl rollout history deploy devsecops
+
+kubectl rollout status deploy devsecops
+
+
+# To find out the status of pod
+kubectl describe po
+
+# To get the list of deployment
+kubectl get depoyment
+
+# To undo or rollback a deployment
+kubectl rollout undo deploy devsecops
+
+
+# To get the id of the container pod
+kubectl exec -it devsecops-7455fd6b96-kztw7 -- id

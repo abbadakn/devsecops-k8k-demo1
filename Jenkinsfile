@@ -5,7 +5,7 @@ pipeline {
             containerName = "devsecops-container"
             serviceName = "devsecops-svc"
             imageName = "abbadakn/numeric-app:${GIT_COMMIT}"
-            applicationURL = "http://devsecops-abbad.eastus.cloudapp.azure.com/"
+            applicationURL = "http://devsecops-abbad.eastus.cloudapp.azure.com"
             applicationURI = "/increment/99"
     }
 

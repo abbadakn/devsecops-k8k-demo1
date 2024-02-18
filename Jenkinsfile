@@ -175,6 +175,28 @@ pipeline {
                 }
             }
         }
+        stage('K8S Deployment - PROD') {
+            steps {
+                parallel(
+                    "Deployment": {
+                    withKubeConfig([credentialsId: 'kubeconfig']) {
+                        sh "sed -i 's#replace#${imageName}#g' k8s_PROD-deployment_service.yaml"
+                        sh "kubectl -n prod apply -f k8s_PROD-deployment_service.yaml"
+                    }
+                },
+                    "Rollout Status": {
+                    withKubeConfig([credentialsId: 'kubeconfig']) {
+                        sh "bash k8s-PROD-deployment-rollout-status.sh"
+                    }
+                })
+            }
+        }
+
+        // stage('Testing Slack') {
+        //    steps {
+        //        sh 'exit 1'
+        //    }
+        //  }
     }
 
     post {
@@ -183,6 +205,7 @@ pipeline {
             jacoco execPattern: 'target/jacoco.exec'
             pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
             dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap_report.html', reportName: 'OWASP ZAP HTML REPORT', reportTitles: 'OWASP ZAP HTML REPORT', useWrapperFileDirectly: true])
         }
 
         // success {
